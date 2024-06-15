@@ -1,0 +1,5 @@
+hosts:
+  - name: host1
+    bmc_address: my.ip.addr.s
+    username_password: ADMIN:PASSWORD
+    #iso_image: http://some.server/debian.iso # Optional

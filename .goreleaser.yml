@@ -1,0 +1,17 @@
+project_name: smcli
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+nfpms:
+- maintainer: Carlos A Becker <root@carlosbecker.dev>
+  description: Sample project.
+  homepage: https://github.com/caarlos0/tasktimer
+  license: MIT
+  formats:
+  - deb
+  - rpm
+  - apk
