@@ -2,6 +2,8 @@
 
 sm-cli is a command-line tool written in Go for managing server operations via Redfish API. It provides commands to interact with BMC (Baseboard Management Controller) systems such as powering on/off servers, managing virtual media, and setting boot options.
 
+I started using this tool because it takes a lot of time to log in to all IPMIs and adjust certain things, especially when you are dealing with 100+ servers. This tool allows you (with a simple bash statement) to walk over all hosts and run tasks in batches.
+
 ## Features
 - Power Management: Control server power state (on, off, restart).
 - Virtual Media: Insert and eject virtual media.
