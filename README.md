@@ -19,7 +19,9 @@ git clone https://github.com/Charlie-Root/smcli.git
 cd sm-cli
 go build -o sm-cli main.go
 ```
-Make sure to have Go installed on your system.
+Make sure to have Go installed on your system. 
+
+Or grab one of the pre-built binaries from the [releases](https://github.com/Charlie-Root/smcli/releases) page.
 
 ## Usage
 The sm-cli tool supports the following commands:
