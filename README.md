@@ -99,3 +99,6 @@ Use -v or --verbose flag to enable detailed output for requests.
 # Contributing
 
 Contributions are welcome! Fork the repository, create a new branch, make your changes, and submit a pull request.
+
+# References
+https://www.supermicro.com/manuals/other/redfish-ref-guide-html/Content/general-content/available-apis.htm
