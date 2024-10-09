@@ -57,3 +57,16 @@ func ServerCreateUser(username string, password string) {
 	
 	MakeRequest("POST", url, body)
 }
+
+func ServerEnableACL() {
+	url := fmt.Sprintf("https://%s/redfish/v1/Managers/1/Oem/Supermicro/IPAccessControl", CurrentHost.BMCAddress)
+	body := []byte(`{"ServiceEnabled": true}`)
+	
+	MakeRequest("PATCH", url, body)
+}
+func ServerCreateACL(address string, netmask string, policy string) {
+	url := fmt.Sprintf("https://%s/redfish/v1/Managers/1/Oem/Supermicro/IPAccessControl/FilterRules", CurrentHost.BMCAddress)
+	body := []byte(fmt.Sprintf(`{"Address": "%s", "PrefixLength": %s, "Policy": "%s"}`, address, netmask, policy))
+	
+	MakeRequest("POST", url, body)
+}

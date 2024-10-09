@@ -20,6 +20,8 @@ func main() {
 	rootCmd.AddCommand(cmd.MediaCmd)
 	rootCmd.AddCommand(cmd.BootCmd)
 	rootCmd.AddCommand(cmd.UserCmd)
+	rootCmd.AddCommand(cmd.AclCmd)
+
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
