@@ -50,3 +50,10 @@ func ServerSetBootOncePXE() {
 	body := []byte(`{"Boot":{ "BootSourceOverrideEnabled": "Once", "BootSourceOverrideTarget": "Pxe", "BootSourceOverrideMode": "UEFI"}}`)
 	MakeRequest("PATCH", url, body)
 }
+
+func ServerCreateUser(username string, password string) {
+	url := fmt.Sprintf("https://%s/redfish/v1/AccountService/Accounts", CurrentHost.BMCAddress)
+	body := []byte(fmt.Sprintf(`{"UserName": "%s", "Password": "%s", "RoleId": "Administrator", "Enabled" : true}`, username, password))
+	
+	MakeRequest("POST", url, body)
+}
