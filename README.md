@@ -8,6 +8,8 @@ I started using this tool because it takes a lot of time to log in to all IPMIs 
 - Power Management: Control server power state (on, off, restart).
 - Virtual Media: Insert and eject virtual media.
 - Boot Options: Set boot order to CD or PXE once.
+- Add new users
+- Enable ACL and add rules
 
 I am adding more features to this tool as I continue to work on it. Feel free to contribute or suggest new features!
 
