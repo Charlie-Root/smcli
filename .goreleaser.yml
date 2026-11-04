@@ -1,3 +1,4 @@
+version: 2
 project_name: smcli
 builds:
   - env: [CGO_ENABLED=0]
@@ -8,8 +9,8 @@ builds:
 
 nfpms:
 - maintainer: Carlos A Becker <root@carlosbecker.dev>
-  description: Sample project.
-  homepage: https://github.com/caarlos0/tasktimer
+  description: Manage Supermicro servers through their BMC (Redfish).
+  homepage: https://github.com/Charlie-Root/smcli
   license: MIT
   formats:
   - deb
