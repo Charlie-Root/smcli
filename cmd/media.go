@@ -7,26 +7,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var mediaISO string
+
 var MediaCmd = &cobra.Command{
-	Use:   "media [insert|eject|status]",
-	Short: "Manage virtual media",
-	Args:  cobra.ExactArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
-		action := args[0]
-		hostName := args[1]
-
-		host.SelectHost(hostName)
-		host.GetRedfishPath()
-
+	Use:       "media [insert|eject|status] [host...]",
+	Short:     "Manage virtual media",
+	Args:      cobra.MinimumNArgs(1),
+	ValidArgs: []string{"insert", "eject", "status"},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		action, hosts := args[0], args[1:]
 		switch action {
-		case "insert":
-			host.ServerVirtualMediaInsert()
-		case "eject":
-			host.ServerVirtualMediaEject()
 		case "status":
-			host.ServerVirtualMediaStatus()
-		default:
-			fmt.Println("Unknown media command:", action)
+			return run(hosts, false, func(c *host.Client) (host.Result, error) { return c.MediaStatus() })
+		case "eject":
+			return run(hosts, true, func(c *host.Client) (host.Result, error) { return c.MediaEject() })
+		case "insert":
+			return run(hosts, true, func(c *host.Client) (host.Result, error) {
+				iso := c.Host.ISOImage
+				if mediaISO != "" {
+					iso = mediaISO
+				}
+				return c.MediaInsert(iso)
+			})
 		}
+		return fmt.Errorf("unknown media action %q (want insert, eject or status)", action)
 	},
+}
+
+func init() {
+	MediaCmd.Flags().StringVar(&mediaISO, "iso", "", "ISO image URL (overrides iso_image from the inventory)")
 }
