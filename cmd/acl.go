@@ -1,49 +1,40 @@
 package cmd
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/Charlie-Root/smcli/host"
 	"github.com/spf13/cobra"
 )
 
-// Parent ACL command (no direct functionality)
 var AclCmd = &cobra.Command{
 	Use:   "acl",
-	Short: "Manage ACL settings",
+	Short: "Manage the BMC IP access control list (Supermicro)",
 }
 
-// Subcommand to enable ACL on the host
 var EnableAclCmd = &cobra.Command{
-	Use:   "enable <host>",
-	Short: "Enable ACL on the specified host",
-	Args:  cobra.ExactArgs(1), // Expect exactly one argument for the host
-	Run: func(cmd *cobra.Command, args []string) {
-		hostName := args[0]
-		host.SelectHost(hostName)
-		host.ServerEnableACL() // Call to enable ACL on the host
+	Use:   "enable [host...]",
+	Short: "Enable IP access control",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return run(args, true, func(c *host.Client) (host.Result, error) { return c.EnableACL() })
 	},
 }
 
-// Subcommand to add an ACL entry
 var AddAclCmd = &cobra.Command{
-	Use:   "add <address> <prefix> <policy> <host>",
-	Short: "Add new ACL entry",
-	Args:  cobra.ExactArgs(4), // Expect address, prefix, policy, and host as arguments
-	Run: func(cmd *cobra.Command, args []string) {
-		address := args[0]
-		prefix := args[1]
-		policy := args[2]
-		hostName := args[3]
-
-		host.SelectHost(hostName)
-		host.ServerCreateACL(address, prefix, policy) // Call to add ACL entry
+	Use:   "add <address> <prefix> <policy> [host...]",
+	Short: "Add an IP access control rule",
+	Args:  cobra.MinimumNArgs(3),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		address, policy, hosts := args[0], args[2], args[3:]
+		prefix, err := strconv.Atoi(args[1])
+		if err != nil || prefix < 0 || prefix > 128 {
+			return fmt.Errorf("invalid prefix length %q", args[1])
+		}
+		return run(hosts, true, func(c *host.Client) (host.Result, error) { return c.AddACL(address, prefix, policy) })
 	},
 }
 
 func init() {
-	// Register subcommands under the acl command
-	AclCmd.AddCommand(EnableAclCmd)
-	AclCmd.AddCommand(AddAclCmd)
-
-	// Register acl command to the root command (assuming RootCmd is the root cobra command)
-	RootCmd.AddCommand(AclCmd)
+	AclCmd.AddCommand(EnableAclCmd, AddAclCmd)
 }

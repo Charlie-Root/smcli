@@ -8,23 +8,15 @@ import (
 )
 
 var BootCmd = &cobra.Command{
-	Use:   "boot [cd|pxe]",
-	Short: "Set boot order",
-	Args:  cobra.ExactArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
-		action := args[0]
-		hostName := args[1]
-
-		host.SelectHost(hostName)
-		host.GetRedfishPath()
-
-		switch action {
-		case "cd":
-			host.ServerSetBootOnceCD()
-		case "pxe":
-			host.ServerSetBootOncePXE()
-		default:
-			fmt.Println("Unknown boot command:", action)
+	Use:       "boot [cd|pxe] [host...]",
+	Short:     "Boot from CD or PXE once (UEFI)",
+	Args:      cobra.MinimumNArgs(1),
+	ValidArgs: []string{"cd", "pxe"},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target, hosts := args[0], args[1:]
+		if target != "cd" && target != "pxe" {
+			return fmt.Errorf("unknown boot target %q (want cd or pxe)", target)
 		}
+		return run(hosts, true, func(c *host.Client) (host.Result, error) { return c.BootOnce(target) })
 	},
 }
